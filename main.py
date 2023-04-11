@@ -111,7 +111,9 @@ This takes a well-formed SQL query as input and returns the result of that query
     ]
 
     prefix = """Have a conversation with a human, answering the following questions as best
-you can and following their instructions. You have access to the following tools:"""
+you can and following their instructions. In cases where you make a change that you'll have to remember down the line,
+return that change in the response. An example is SQL DDL. You should record these statements or the resulting schema so it can
+be used down the line. You have access to the following tools:"""
     suffix = """Begin!"
 
     Summarized history:
@@ -148,6 +150,16 @@ Figure out how to store this in the database and set up the database as such.
 
     p = """
 Peyton and Lasse played ping pong. Lasse won 21-15. Record this information.
+"""
+    agent.run(input=p)
+
+    print(agent.memory.load_memory_variables({}))
+
+def dedup_games():
+    agent = initialize_agent_with_memory()
+
+    p = """
+    Delete all tables from the database.
 """
     agent.run(input=p)
 
