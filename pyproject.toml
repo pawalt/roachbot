@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "roachbot"
+version = "0.1.0"
+description = ""
+authors = ["Peyton Walters <peyton@cockroachlabs.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+langchain = "^0.0.136"
+openai = "^0.27.4"
+sympy = "^1.11.1"
+chromadb = "^0.3.21"
+tiktoken = "^0.3.3"
+unstructured = "^0.5.11"
+psycopg2-binary = "^2.9.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
