@@ -90,7 +90,7 @@ def create_db():
 
 
 def initialize_agent_with_memory():
-    llm = ChatOpenAI(temperature=0, model_name=MODEL_NAME)
+    llm = ChatOpenAI(temperature=0.7, model_name=MODEL_NAME)
 
     docs_store = get_chroma_docs_store() 
     docs = RetrievalQA.from_chain_type(llm=llm, retriever=docs_store.as_retriever())
@@ -111,9 +111,11 @@ This takes a well-formed SQL query as input and returns the result of that query
     ]
 
     prefix = """Have a conversation with a human, answering the following questions as best
-you can and following their instructions. In cases where you make a change that you'll have to remember down the line,
-return that change in the response. An example is SQL DDL. You should record these statements or the resulting schema so it can
-be used down the line. You have access to the following tools:"""
+you can and following their instructions. In cases where you create or modify schema, respond
+with exactly the new schema and a description of how to use it.
+If you ever make a modification to the database, before you do so, inspect the database to
+ensure that you are respecting the current schema.
+You have access to the following tools:"""
     suffix = """Begin!"
 
     Summarized history:
@@ -131,7 +133,7 @@ be used down the line. You have access to the following tools:"""
 
     memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=500)
 
-    llm_chain = LLMChain(llm=OpenAI(temperature=0), prompt=prompt)
+    llm_chain = LLMChain(llm=llm, prompt=prompt)
     agent = ZeroShotAgent(llm_chain=llm_chain, tools=tools, verbose=True)
     return AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True, memory=memory)
 
@@ -146,14 +148,30 @@ Figure out how to store this in the database and set up the database as such.
 """
     agent.run(input=p)
 
-    print(agent.memory.load_memory_variables({}))
-
     p = """
 Peyton and Lasse played ping pong. Lasse won 21-15. Record this information.
 """
     agent.run(input=p)
 
-    print(agent.memory.load_memory_variables({}))
+    p = """
+Peyton and Lasse played ping pong. Peyton won 21-19. Record this information.
+"""
+    agent.run(input=p)
+
+    p = """
+Peyton and Lasse played ping pong. Lasse won 21-20. Record this information.
+"""
+    agent.run(input=p)
+
+    p = """
+Who has won more ping pong games?
+"""
+    agent.run(input=p)
+
+    p = """
+What's the total number of points scored by all ping pong players?
+"""
+    agent.run(input=p)
 
 def dedup_games():
     agent = initialize_agent_with_memory()
@@ -163,6 +181,4 @@ def dedup_games():
 """
     agent.run(input=p)
 
-    print(agent.memory.load_memory_variables({}))
-
-run_agent_with_memory()
+dedup_games()
