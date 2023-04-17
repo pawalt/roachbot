@@ -1,6 +1,5 @@
 # Next Tasks
 
-- The message history doesn't tell the full story since it doesn't store info about what SQL was executed - that's an action input. Need to store the executed SQL, at least for the schema.
 - Message history isn't persistent between runs. Need to persist it to disk.
 
 # How to start

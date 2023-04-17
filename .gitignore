@@ -1,3 +1,4 @@
 .env
 cockroach-data
 docs-db
+memory_summary.json
