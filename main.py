@@ -173,16 +173,16 @@ a description of the action you performed. If the user did not provide sufficien
 for you to perform your task and know you're doing the right thing, respond with a request
 for more detailed information.
 You have access to the following tools:"""
-    suffix = """Begin!"
+    suffix = """Begin!
 
-    Summarized history:
-    {history}
+Summarized history:
+{history}
 
-    Current database table schema:
-    {schema}
+Current database table schema:
+{schema}
 
-    Question: {input}
-    {agent_scratchpad}"""
+Question: {input}
+{agent_scratchpad}"""
 
     prompt = ZeroShotAgent.create_prompt(
         tools, 
@@ -265,13 +265,16 @@ def delete_games(agent: AgentExecutor) -> None:
     agent.run(input=p)
 
 def repl(agent: AgentExecutor):
-    while True:
-        print()
-        user_input = input("Human $ ").strip()
+    try:
+        while True:
+            print()
+            user_input = input("Human $ ").strip()
 
-        if user_input == "done":
-            break
+            if user_input == "done":
+                break
 
-        agent.run(user_input)
+            agent.run(user_input)
+    except EOFError:
+        print("done")
 
 run_agent_with_memory(repl)

@@ -14,6 +14,8 @@ chromadb = "^0.3.21"
 tiktoken = "^0.3.3"
 unstructured = "^0.5.11"
 psycopg2-binary = "^2.9.6"
+termcolor = "^2.3.0"
+keyboard = "^0.13.5"
 
 
 [build-system]
